@@ -2,4 +2,4 @@
 Second programming assignment for OS
 
 ## TODO
-Add compiling instructions in Makefile
+Add instructions to compile and run in Makefile
