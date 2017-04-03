@@ -13,13 +13,13 @@ TARGET = bankers
 all: $(TARGET)
 
 $(TARGET): $(OBJS)
-    $(CC) -lpthread -o $(TARGET) $(OBJS)
+	$(CC) -lpthread -pthread -o $(TARGET) $(OBJS)
 
-bankers.o: bankers.c customers.h bank.h
-    $(CC) -lpthread -c bankers.c
+bankers.o: bankers.c customer.h bank.h
+	$(CC) -lpthread -pthread -c bankers.c
 
 customer.o: customer.c customer.h
-    $(CC) -lpthread -c customer.c
+	$(CC) -lpthread -pthread -c customer.c
 
 clean:
-    $(RM) *.o *~ $(TARGET)
+	$(RM) *.o *~ $(TARGET)
