@@ -9,6 +9,7 @@
  * logic behind the Banker's Algorithm simulation. 
  * 
  * Compilation Instructions: make
+ * 
  * Run: ./bankers [num_resource1, num_resource2, ..., num_resourceN]
  *
  * @author Aaron Alphonsus
