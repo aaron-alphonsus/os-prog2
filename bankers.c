@@ -65,6 +65,8 @@ int main(int argc, char *argv[])
     //     printf("\n");
     // }
 
+    display();
+
     create_customers();   
 
     for (int i = 0; i < NUMBER_OF_CUSTOMERS; i++)
