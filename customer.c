@@ -6,16 +6,6 @@
 
 #include "bank.h"
 
-int sum_need(int customer_id)
-{
-    int sum = 0;    
-
-    for(int i = 0; i < NUMBER_OF_RESOURCES; i++)
-        sum += need[customer_id][i];
-    
-    return sum;
-}
-
 void display()
 {
     char resource_type[] = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
@@ -105,19 +95,41 @@ int request_resources(int customer_num, int request[])
     }      
 }
 
+int release_resources(int customer_num, int release[])
+{
+    // acquire mutex lock    
+    pthread_mutex_lock(&mutex_lock); 
+ 
+    // Print release array
+    printf("Release P%d <", customer_num);
+    for(int i = 0; i < NUMBER_OF_RESOURCES - 1; i++)
+        printf("%d, ", release[i]);
+    printf("%d>\n\n", release[NUMBER_OF_RESOURCES - 1]);
+
+    for(int i = 0; i < NUMBER_OF_RESOURCES; i++)
+    {
+        available[i] = available[i] + release[i];
+        allocation[customer_num][i] = allocation[customer_num][i] - release[i];
+        need[customer_num][i] = need[customer_num][i] + release[i];
+    }
+        
+    display(); 
+
+    // release mutex lock
+    pthread_mutex_unlock(&mutex_lock); 
+    return 0;     
+}
+
 void *customer_loop( void *param )
 {
     int customer_id = *(int *)param;
-    int request[NUMBER_OF_RESOURCES];
-    int remaining = 0;
-    int request_sum = 0;
+    int request[NUMBER_OF_RESOURCES], release[NUMBER_OF_RESOURCES];
+    int request_sum = 0, release_sum = 0;
     
     // printf("Hey hey hey, it's customer %d\n", customer_id);
  
     srandom((unsigned) time(NULL));
    
-    remaining = sum_need(customer_id);
-
     // loop continuously
     while (1)
     {
@@ -128,41 +140,37 @@ void *customer_loop( void *param )
             request_sum += request[i];
         }        
           
-        // printf("Request sum = %d\n", request_sum);
-
-        // if(request_sum > 0)
-        // {
-        //     for(int i = 0; i < NUMBER_OF_RESOURCES; i++)
-        //         need[customer_id][i] -= request[i];
-        //     remaining = sum_need(customer_id);
-        //     printf("P%d remaining = %d\n\n", customer_id, remaining);
-        // }
-                     
-        // request resources
-        request_resources(customer_id, request);
+        if(request_sum > 0)
+        {                    
+            // request resources
+            request_resources(customer_id, request);
         
-        // sleep for random amount of time    
-        sleep(rand() % MAX_SLEEP_TIME);
-    
+            // sleep for random amount of time    
+            sleep(rand() % MAX_SLEEP_TIME);
+        }    
+        
         // create random release array (% alloc[customer_id][])
-        // release_resources
-        // sleep   
+        for(int i = 0; i < NUMBER_OF_RESOURCES; i++)
+        {
+            release[i] = rand() % (allocation[customer_id][i] + 1);
+            release_sum += release[i];
+        }        
+          
+        if(release_sum > 0)
+        {                    
+            // release resources
+            release_resources(customer_id, release);
+        
+            // sleep for random amount of time    
+            sleep(rand() % MAX_SLEEP_TIME);
+        }   
     
-        remaining = sum_need(customer_id);
-
         request_sum = 0; 
-        sleep(rand() % MAX_SLEEP_TIME);
+        release_sum = 0;
     } 
-}
-
-int release_resources(int customer_num, int release[])
-{
-    if(1)
-        return 0;
-    return -1;
 }
 
 int safety_test()
 {
-
+    
 }

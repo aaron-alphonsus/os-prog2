@@ -15,7 +15,7 @@ void init(char *argv[])
     if(pthread_mutex_init(&mutex_lock, NULL) != 0)
        printf("%s\n", strerror(errno));
 
-    // Test only two arguments.
+    // Try passing in only two arguments.
     for(int i = 0; i < NUMBER_OF_RESOURCES; i++)
         available[i] = atoi(argv[i+1]);
 
@@ -56,32 +56,10 @@ int main(int argc, char *argv[])
     srandom((unsigned) time(NULL));
 
     init(argv);
-    // printf("The amount of each resource: %d, %d, & %d\n", available[0], 
-        // available[1], available[2]);
-    // for(int i = 0; i < NUMBER_OF_CUSTOMERS; i++)
-    // {
-    //     for(int j = 0; j < NUMBER_OF_RESOURCES; j++)
-    //         printf("%d ", allocation[i][j]);
-    //     printf("\n");
-    // }
-    // for(int i = 0; i < NUMBER_OF_CUSTOMERS; i++)
-    // {
-    //     for(int j = 0; j < NUMBER_OF_RESOURCES; j++)
-    //         printf("%d ", maximum[i][j]);
-    //     printf("\n");
-    // }
-    // for(int i = 0; i < NUMBER_OF_CUSTOMERS; i++)
-    // {
-    //     for(int j = 0; j < NUMBER_OF_RESOURCES; j++)
-    //         printf("%d ", need[i][j]);
-    //     printf("\n");
-    // }
-
-
+    
     display();
 
     create_customers();   
-
     for (int i = 0; i < NUMBER_OF_CUSTOMERS; i++)
         pthread_join(customers[i], NULL);
 
