@@ -53,24 +53,33 @@ void display()
     printf("\n");
 }
 
-int request_resources(int customer_num, int request[], int *try_again)
+int request_resources(int customer_num, int request[])
 {
-    *try_again = 0;
+    int flag = 0;    
 
     // acquire mutex lock    
     pthread_mutex_lock(&mutex_lock); 
  
+    // Print request array
     printf("Request P%d <", customer_num);
     for(int i = 0; i < NUMBER_OF_RESOURCES - 1; i++)
         printf("%d, ", request[i]);
     printf("%d>\n", request[NUMBER_OF_RESOURCES - 1]);
 
+    // Check if request is less than available resources
     for(int i = 0; i < NUMBER_OF_RESOURCES; i++)
     {
         if (request[i] > available[i])
-           *try_again = 1;
+           flag = 1;
     }
-    if(!*try_again)
+    if(flag)
+    {
+        printf("Resources unavailable.\n\n");    
+        pthread_mutex_unlock(&mutex_lock); // Release mutex lock
+        
+        return -1; 
+    }
+    else
     {
         printf("Good to go. Allocate and safety test.\n\n");
         
@@ -92,17 +101,8 @@ int request_resources(int customer_num, int request[], int *try_again)
 
         // release mutex lock
         pthread_mutex_unlock(&mutex_lock); 
-        return 0;
-    }
-    else
-    {
-        printf("Resources unavailable. Wait and try again.\n\n");    
-        pthread_mutex_unlock(&mutex_lock); // Release mutex lock
-        
-        return -1;    
-    }
-    
-       
+        return 0; 
+    }      
 }
 
 void *customer_loop( void *param )
@@ -111,8 +111,7 @@ void *customer_loop( void *param )
     int request[NUMBER_OF_RESOURCES];
     int remaining = 0;
     int request_sum = 0;
-    int try_again = 0;
-    int success = 0;
+    
     // printf("Hey hey hey, it's customer %d\n", customer_id);
  
     srandom((unsigned) time(NULL));
@@ -128,9 +127,7 @@ void *customer_loop( void *param )
             request[i] = rand() % (need[customer_id][i] + 1);
             request_sum += request[i];
         }        
-
-        
-               
+          
         // printf("Request sum = %d\n", request_sum);
 
         // if(request_sum > 0)
@@ -142,14 +139,9 @@ void *customer_loop( void *param )
         // }
                      
         // request resources
-        // if > available, sleep and try again (continuously)
-        success = request_resources(customer_id, request, &try_again);
-        while (success == -1 && try_again)
-        {
-            sleep(rand() % MAX_SLEEP_TIME);
-            success = request_resources(customer_id, request, &try_again);
-        }    
-        // otherwise, sleep
+        request_resources(customer_id, request);
+        
+        // sleep for random amount of time    
         sleep(rand() % MAX_SLEEP_TIME);
     
         // create random release array (% alloc[customer_id][])
@@ -160,8 +152,7 @@ void *customer_loop( void *param )
 
         request_sum = 0; 
         sleep(rand() % MAX_SLEEP_TIME);
-    }
-    // release allocation[customer_id] 
+    } 
 }
 
 int release_resources(int customer_num, int release[])

@@ -61,9 +61,22 @@ int main(int argc, char *argv[])
     // for(int i = 0; i < NUMBER_OF_CUSTOMERS; i++)
     // {
     //     for(int j = 0; j < NUMBER_OF_RESOURCES; j++)
+    //         printf("%d ", allocation[i][j]);
+    //     printf("\n");
+    // }
+    // for(int i = 0; i < NUMBER_OF_CUSTOMERS; i++)
+    // {
+    //     for(int j = 0; j < NUMBER_OF_RESOURCES; j++)
     //         printf("%d ", maximum[i][j]);
     //     printf("\n");
     // }
+    // for(int i = 0; i < NUMBER_OF_CUSTOMERS; i++)
+    // {
+    //     for(int j = 0; j < NUMBER_OF_RESOURCES; j++)
+    //         printf("%d ", need[i][j]);
+    //     printf("\n");
+    // }
+
 
     display();
 
