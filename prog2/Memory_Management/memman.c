@@ -9,7 +9,8 @@
  * mask to extract the bits we need, in order to calculate the page number and
  * offset, as required.
  *
- * Compilation Instuctions: make
+ * Compilation Instructions: make
+ * 
  * Run: ./memman virtual-address
  *
  * @author Aaron Alphonsus
@@ -35,7 +36,7 @@
  * @param[in] argc Integer count of the command-line arguments 
  * @param[in] argv Vector of the command-line arguments
  *
- * @return 0 Indicates normal termination of main.
+ * @return 0 indicates normal termination of main.
  */
 int main(int argc, char *argv[])
 {    

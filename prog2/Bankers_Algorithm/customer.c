@@ -139,7 +139,7 @@ int request_resources(int customer_num, int request[])
 {
     int flag = 0;    
 
-    /// acquire mutex lock    
+    /// Acquire mutex lock    
     pthread_mutex_lock(&mutex_lock); 
  
     /// Print request statement and array
@@ -214,7 +214,7 @@ int request_resources(int customer_num, int request[])
  */
 int release_resources(int customer_num, int release[])
 {
-    /// acquire mutex lock    
+    /// Acquire mutex lock    
     pthread_mutex_lock(&mutex_lock); 
  
     /// Print release array
@@ -240,7 +240,7 @@ int release_resources(int customer_num, int release[])
 }
 
 /**
- * This function simulates the behavoir of each customer. The customers request
+ * This function simulates the behavior of each customer. The customers request
  * some amount of resources, wait and release some amount of resources. This 
  * happens in a continuous loop
  *
