@@ -1,7 +1,9 @@
 #include <pthread.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include <time.h>
+#include <errno.h>
 
 #include "bank.h"
 #include "customer.h"
@@ -10,6 +12,9 @@ pthread_t customers[NUMBER_OF_CUSTOMERS];
 
 void init(char *argv[])
 {
+    if(pthread_mutex_init(&mutex_lock, NULL) != 0)
+       printf("%s\n", strerror(errno));
+
     // Test only two arguments.
     for(int i = 0; i < NUMBER_OF_RESOURCES; i++)
         available[i] = atoi(argv[i+1]);
